@@ -16,6 +16,10 @@
 	
 	<!-- Custom CSS3 Styles -->
 	<style>
+		a {
+			cursor:pointer;
+		}
+		
 		#headerBar{
 			position:fixed;
 			top: 0px;
@@ -31,11 +35,40 @@
 		}
 		
 		#intro_action{
-			line-height:100px;
+			margin-top:1.35em;
+			text-align:right;
 		}
 		
 		#login{
-			margin: 20px 0px;
+			position:absolute;
+			top: 25%;
+			padding:25px;
+			background-color:#fff;
+			border-radius: 15px;
+			border: 2px #AAA solid;	
+		}
+		
+		#login h2, #login h1{
+			margin-top: 0px;
+		}
+		
+		#login_overlay{
+			position:absolute;
+			top:0;
+			left:0;
+			z-index:9999;
+			width:100%;
+			height:100%;
+			background: rgba(100,100,100,0.5);
+		}
+		
+		#login_esc{
+			float:right;
+			cursor: pointer;
+		}
+		
+		#login_intro_signup{
+			padding: 20px 0px;
 		}
 		
 		#login_submit{
@@ -52,20 +85,20 @@
 			padding: 0;
 		}
 		
+		#intro_welcome{
+			background-color: yellow;
+		}
+		
 		#intro_desc{
-			background-color: red;
+			background-color:#FFF;
 		}
 		
 		#intro_features{
 			background-color: blue;
 		}
 		
-		#intro_welcome{
-			background-color: yellow;
-		}
-		
 		#intro_signup{
-			background-color:green;
+			background-color:#FFF;
 		}
 	</style>
 	
@@ -79,7 +112,7 @@
 				resizeDiv : function(win){
 					$(".introSection").each(function(){
 						$(this).css({
-							"height" : win+"px"
+							"min-height" : win+"px"
 						});
 					}); 	 	
 				},
@@ -97,8 +130,18 @@
 					var targetPos = $("#intro_signup").offset().top;
 					$('html, body').animate({scrollTop:targetPos}, 'slow');
 				},
-				minimizeHeader : function(){
-					
+				openLogin : function(){
+					//show overlay
+					$("#login_overlay").show();
+					//disable scrolling
+					$("body").attr("style", "overflow:hidden");
+				},
+				
+				closeLogin : function(){
+					//hide overlay
+					$("#login_overlay").hide();
+					//enable scrolling
+					$("body").removeAttr("style");
 				}
 			},
 			ctl : {
@@ -123,13 +166,32 @@
 						if(typeof target.attr("class") != "undefined"){
 							className = target.attr("class");
 						}
+
+						//if sign in, open overlay
+						if(className.indexOf("signin-btn") != -1){
+							dat.ui.openLogin();
+						}
+					});
+					
+					$("#login_overlay").on("click", function(e){
+						e.preventDefault();
+						var target = $(e.target);
+						var className = "";
+						if(typeof target.attr("class") != "undefined"){
+							className = target.attr("class");
+						}
 						//if sign up button, scroll down to sign up div
 						if(className.indexOf("signup-btn") != -1){
+							dat.ui.closeLogin();
 							dat.ui.scrollToSignup();
 						}
 						//if submit button, submit
 						if(className.indexOf("submit-btn") != -1){
 							
+						}
+						//if exit button, well... exit
+						if(className.indexOf("close_login") != -1){
+							dat.ui.closeLogin();	
 						}
 					});
 				},
@@ -154,18 +216,28 @@
 		<div id="header_logo" class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 			<h1>DAT App Tho</h1>
 		</div>
-		<div id="login" class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-			<div id="login_email" class="col-xs-12 col-sm-3 col-md-3 col-lg-3"> 	
-				Email:<input type="text" class="form-control"/>
-			</div>
-			<div id="login_password" class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
-				Password:<input type="password" class="form-control"/>
-			</div>
-			<div id="login_submit" class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-				<a class="btn btn-default submit-btn">Submit</a>
-				or <a class="btn btn-primary signup-btn">Sign up Here</a>
-			</div>
+		<div id="intro_action" class="col-xs-12 col-sm-5 col-md-5 col-lg-5">
+			<a class="btn btn-primary signin-btn">Sign In</a>	
+		</div> 
+		<div id="login_overlay" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 introSection" style="display:none">
+			<div id="login" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-sm-offset-3 col-md-offset-3 col-lg-offset-3">
+				<div id="login_esc" >
+					<h1 class="close_login">X</h1>
+				</div>
+				<h2>Login</h2>
+				<div id="login_email" class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 	
+					Email:<input type="text" class="form-control"/>
+				</div>
+				<div id="login_password" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					Password:<input type="password" class="form-control"/>
+				</div>
+				<div id="login_submit" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<a class="btn btn-primary submit-btn">Submit</a>
+					<div id="login_intro_signup">or <a class="signup-btn">Sign up here</a></div>
+				</div>
+			</div>			
 		</div>
+
 	</div>
 	<div id="scrollBody" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 introSection">
 		<div id="intro_welcome" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 introSection">
@@ -179,6 +251,9 @@
 		</div>
 		<div id="intro_signup" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 introSection">
 			Signup
+		</div>
+		<div id="intro_footer" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			Footer
 		</div>
 	</div>
 </body>
