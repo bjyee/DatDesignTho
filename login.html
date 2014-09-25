@@ -1,0 +1,191 @@
+<!-- 
+	This Page will have login in features and info scrolling
+ -->
+<head>
+	<title>DAT - Login</title>
+	
+	<!-- Mobile -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<!-- JQuery -->
+    <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+    
+	<!-- Bootstap -->
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+	
+	<!-- Custom CSS3 Styles -->
+	<style>
+		#headerBar{
+			position:fixed;
+			top: 0px;
+			left:0px;
+			z-index:9999;
+			min-height:100px;
+			 
+		}
+		
+		#header_logo h1{
+			margin:0px;
+			line-height:100px;
+		}
+		
+		#intro_action{
+			line-height:100px;
+		}
+		
+		#login{
+			margin: 20px 0px;
+		}
+		
+		#login_submit{
+			margin-top:1.35em;
+		}
+		
+		#scrollBody{
+			position:absolute;
+			top:0px;
+			left:0px;
+		}
+		
+		#scrollBody{
+			padding: 0;
+		}
+		
+		#intro_desc{
+			background-color: red;
+		}
+		
+		#intro_features{
+			background-color: blue;
+		}
+		
+		#intro_welcome{
+			background-color: yellow;
+		}
+		
+		#intro_signup{
+			background-color:green;
+		}
+	</style>
+	
+	<!-- Custom JQuery Scripts -->
+	<script>
+		dat = {
+			pg : {
+				
+			},
+			ui : {
+				resizeDiv : function(win){
+					$(".introSection").each(function(){
+						$(this).css({
+							"height" : win+"px"
+						});
+					}); 	 	
+				},
+				checkMin : function(){
+					//check to see if window is too small. if too small dont resize smaller
+					var h = $(window).height();
+					if(h <= 600){
+						//min size
+						dat.ui.resizeDiv(815);
+					}else{
+						dat.ui.resizeDiv(h);
+					}
+				},
+				scrollToSignup : function(){
+					var targetPos = $("#intro_signup").offset().top;
+					$('html, body').animate({scrollTop:targetPos}, 'slow');
+				},
+				minimizeHeader : function(){
+					
+				}
+			},
+			ctl : {
+				bindEvents : function(){
+					$(window).resize(function(){
+						dat.ui.checkMin();
+					});
+					
+					$(window).on("scroll", function(){
+						var header = $("#headerBar").offset().top;
+						var headerEnd = header + $("#headerBar").height();
+						var position = $(document).scrollTop();
+						if(position >= headerEnd){
+							dat.ui.minimizeHeader();
+						}
+					});
+					
+					$("#headerBar").on("click", function(e){
+						e.preventDefault();
+						var target = $(e.target);
+						var className = "";
+						if(typeof target.attr("class") != "undefined"){
+							className = target.attr("class");
+						}
+						//if login button, hide current and show login fields
+						if(className.indexOf("login-btn") != -1){
+							dat.ui.showLogin();
+						}
+						//if sign up button, scroll down to sign up div
+						if(className.indexOf("signup-btn") != -1){
+							dat.ui.scrollToSignup();
+						}
+						//if submit button, submit
+						if(className.indexOf("submit-btn") != -1){
+							dat.ui.hideLogin();
+						}
+					});
+				},
+				
+				submitLogin : function (){
+					
+				},
+				
+				submitSignup : function(){
+					
+				}
+			},
+			init : function(){
+			  	dat.ui.checkMin();
+				dat.ctl.bindEvents();
+			}
+		};
+	</script>
+</head>
+<body>
+	<div id="headerBar" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<div id="header_logo" class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+			<h1>DAT App Tho</h1>
+		</div>
+		<div id="login" class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+			<div id="login_email" class="col-xs-12 col-sm-3 col-md-3 col-lg-3"> 	
+				Email:<input type="text" class="form-control"/>
+			</div>
+			<div id="login_password" class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+				Password:<input type="password" class="form-control"/>
+			</div>
+			<div id="login_submit" class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+				<a class="btn btn-default submit-btn">Submit</a>
+				or <a class="btn btn-primary">Sign up Here</a>
+			</div>
+		</div>
+	</div>
+	<div id="scrollBody" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 introSection">
+		<div id="intro_welcome" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 introSection">
+			Youtube Vid on how awesome we are. Or maybe some kind of slideshow.
+		</div>
+		<div id="intro_desc" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 introSection">
+			Description
+		</div>
+		<div id="intro_features" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 introSection">
+			Features
+		</div>
+		<div id="intro_signup" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 introSection">
+			Signup
+		</div>
+	</div>
+</body>
+<script>
+	dat.init();
+</script>
