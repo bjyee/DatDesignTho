@@ -30,7 +30,7 @@
 			left:0px;
 			z-index:9999;
 			min-height:100px;
-            color:#000;
+            color:#FFF;
 			 
 		}
 		
@@ -92,11 +92,11 @@
 		}
 		
 		#intro_welcome{
-		    background-color:#fff;
+		    background-color:#222;
 		}
 		
 		.introSection{
-		    background-color:#222;
+		    background-color:#FFF;
 		}
 	</style>
 	
@@ -141,7 +141,7 @@
                 fadeColors : function(s,e,p){
                     var d = e - s;
                     var np = p - s;
-                    var hex = Math.round(255 * (np/d));
+                    var hex = 255 - Math.round(255 * (np/d));
                     $("#headerBar").css({
                         "color" : "rgb("+hex+","+hex+","+hex+")",
                     });
@@ -173,9 +173,9 @@
 						if(start < position && position < end){
 						    dat.ui.fadeColors(start, end, position);
 						}else if(position >= end){
-							dat.ui.changeHeaderWhite();
+							dat.ui.changeHeaderBlack();
 						}else{
-						    dat.ui.changeHeaderBlack();
+						    dat.ui.changeHeaderWhite();
 						}
 					});
 					
